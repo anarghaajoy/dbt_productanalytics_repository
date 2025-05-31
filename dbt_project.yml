@@ -44,3 +44,5 @@ models:
       +materialized: table
     marts:
       +materialized: table
+    kpi:
+      +materialized: table

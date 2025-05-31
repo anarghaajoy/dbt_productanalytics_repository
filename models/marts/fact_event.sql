@@ -7,6 +7,8 @@ WITH fact_event AS (
         e.timestamp,
         dut.utm_key
     FROM {{ ref('stg_feature_events') }} e
+    LEFT JOIN {{ ref('dim_users') }} du
+        ON e.user_id = du.user_id
     LEFT JOIN {{ ref('dim_utm') }} dut
         ON e.utm_source = dut.utm_source
         AND e.utm_medium = dut.utm_medium
