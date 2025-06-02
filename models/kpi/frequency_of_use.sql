@@ -2,7 +2,7 @@ WITH used_events AS (
     SELECT
         user_id,
         feature_name,
-        date(timestamp) as usage_date
+        date(event_time) as usage_date
     from {{ ref('fact_event') }}
     where event_name = 'feature_used'
 ),
@@ -10,16 +10,18 @@ usage_counts AS (
     SELECT
         u.user_id,
         u.feature_name,
-        count(*) AS total_uses,
-        TIMESTAMP_DIFF(du.first_used, du.first_seen, DAY) + 1 AS active_days
+        EXTRACT(MONTH FROM usage_date) AS usage_month,
+        COUNT(*) AS total_uses,
+        --DATE_DIFF(MAX(usage_date), MIN(usage_date), DAY) + 1 AS active_days
     FROM used_events u
     JOIN {{ref('dim_users')}} du
     ON u.user_id = du.user_id
-    GROUP BY u.user_id, u.feature_name, du.first_used, du.first_seen
+    GROUP BY u.user_id, u.feature_name, usage_month
 )
 
 SELECT
     feature_name,
-    avg(total_uses * 1.0 / active_days) AS avg_daily_frequency
+    usage_month,
+    ROUND(AVG(total_uses),2) AS avg_monthly_frequency
 FROM usage_counts
-GROUP BY feature_name
+GROUP BY feature_name, usage_month
