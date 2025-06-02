@@ -2,7 +2,7 @@ WITH stg_users AS (
     SELECT
         user_id,
         user_type,
-        min(timestamp) AS signed_up_at
+        min(event_time) AS signed_up_at
     FROM {{ ref('stg_feature_events') }}
     WHERE event_name = 'signed_up'
     GROUP BY user_id, user_type
@@ -11,8 +11,8 @@ stg_users1 AS (
     SELECT
         user_id,
         user_type,
-        min(timestamp) AS first_seen,
-        max(timestamp) AS last_seen
+        min(event_time) AS first_seen,
+        max(event_time) AS last_seen
     FROM {{ ref('stg_feature_events') }}
     WHERE event_name = 'feature_viewed'
     GROUP BY user_id, user_type
@@ -21,8 +21,8 @@ stg_users2 AS (
     SELECT
         user_id,
         user_type,
-        min(timestamp) AS first_used,
-        max(timestamp) AS last_used
+        min(event_time) AS first_used,
+        max(event_time) AS last_used
     FROM {{ ref('stg_feature_events') }}
     WHERE event_name = 'feature_used'
     GROUP BY user_id, user_type

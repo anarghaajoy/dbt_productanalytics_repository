@@ -4,7 +4,7 @@ WITH fact_event AS (
         e.event_name,
         e.feature_name,
         e.session_id,
-        e.timestamp,
+        e.event_time,
         dut.utm_key
     FROM {{ ref('stg_feature_events') }} e
     LEFT JOIN {{ ref('dim_users') }} du
@@ -24,5 +24,5 @@ SELECT
     event_name,
     feature_name,
     session_id,
-    timestamp
+    event_time
 from fact_event

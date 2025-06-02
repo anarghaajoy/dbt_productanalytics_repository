@@ -6,7 +6,7 @@ WITH stg_feature_events AS (
         feature_name,
         user_type,
         session_id,
-        timestamp,
+        DATETIME_ADD(DATETIME(timestamp), INTERVAL 2000 YEAR) AS event_time,
         utm_source,
         utm_medium,
         utm_campaign,
