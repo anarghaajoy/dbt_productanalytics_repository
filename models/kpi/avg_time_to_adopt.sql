@@ -5,6 +5,7 @@ WITH adoption_rate AS(
         du.first_seen,
         du.first_used,
         fe.event_time,
+        fe.month_name,
         TIMESTAMP_DIFF(du.first_used, du.first_seen, HOUR) AS time_to_adopt_hr
     FROM {{ref('fact_event')}} fe
     JOIN {{ref('dim_users')}} du
@@ -14,7 +15,7 @@ WITH adoption_rate AS(
 
 SELECT 
     feature_name, 
-    EXTRACT(MONTH FROM event_time) AS month_number,
+    month_name,
     ROUND(AVG(time_to_adopt_hr)/24,2) AS avg_time_to_adopt_days
 FROM adoption_rate
-GROUP BY feature_name, month_number
+GROUP BY feature_name, month_name

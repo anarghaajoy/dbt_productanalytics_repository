@@ -5,6 +5,7 @@ WITH fact_event AS (
         e.feature_name,
         e.session_id,
         e.event_time,
+        EXTRACT(MONTH FROM e.event_time) AS month_name,
         dut.utm_key
     FROM {{ ref('stg_feature_events') }} e
     LEFT JOIN {{ ref('dim_users') }} du
@@ -22,6 +23,7 @@ SELECT
     user_id,
     utm_key,
     event_name,
+    month_name,
     feature_name,
     session_id,
     event_time
