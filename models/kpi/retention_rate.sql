@@ -23,7 +23,7 @@ retention_rate AS(
     SELECT
         feature_name,
         cohort_month,
-        ROUND((COUNT(DISTINCT user_id)/(SELECT COUNT(*) FROM {{ ref('dim_users')}}))*100, 2) AS retention_rate
+        ROUND((COUNT(DISTINCT user_id)/(SELECT COUNT(*) FROM {{ ref('dim_users')}}))*100, 3) AS retention_rate
         FROM subsequent_uses
         WHERE rank1>= 2
         GROUP BY feature_name, cohort_month
